@@ -25,10 +25,10 @@ public class CodeGenerator {
 
         //2、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/ydbc?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");
+        dsc.setUrl("jdbc:mysql://bewcf.info:3306/signlang?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("123456");
+        dsc.setUsername("signlang");
+        dsc.setPassword("signlang123456");
         mpg.setDataSource(dsc);
 
         // 3、包配置
@@ -45,7 +45,7 @@ public class CodeGenerator {
         // strategy.setSuperEntityClass("com.example.entity.BaseEntity");
         // strategy.setTablePrefix("t_"); // 表名前缀
         strategy.setEntityLombokModel(true); //使用lombok
-        strategy.setInclude("hotel");  // 逆向工程使用的表   如果要生成多个,这里可以传入String[]
+        strategy.setInclude("word");  // 逆向工程使用的表   如果要生成多个,这里可以传入String[]
         mpg.setStrategy(strategy);
 
         //5、执行

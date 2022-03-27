@@ -7,11 +7,15 @@ import javax.persistence.Table;
 @Table(name = "user")
 public class User {
 
-    private Long id;
+    private Integer id;
 
-    private String name;
+    private String nick;
 
-    private int age;
+    private String openid;
 
-    private String email;
+    private String sessionKey;
+
+    private String imgUrl;
+
+    private Character sex;
 }
