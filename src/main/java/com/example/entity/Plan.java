@@ -1,11 +1,11 @@
 package com.example.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -19,29 +19,30 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ToString
-public class Word implements Serializable {
+public class Plan implements Serializable {
 
     private static final long serialVersionUID=1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String type;
-
-    private String answer;
-
-    private String answer2;
-
-    private String answer3;
-
-    private String answer4;
-
-    private String description;
-
-    private String imgUrl;
+    private Integer userId;
 
     private Integer dictionaryId;
+
+    private Integer amount;
+
+    private Integer pOrder;
+
+    private LocalDate startTime;
+
+    private Boolean completed;
+
+    private Integer totalNumber;
+
+    private Integer learnedNumber;
+
+    private Boolean state;
 
 
 }

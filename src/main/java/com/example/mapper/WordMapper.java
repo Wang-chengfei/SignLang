@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
  * </p>
  *
  * @author wcf
- * @since 2022-03-27
+ * @since 2022-04-08
  */
 @Repository
 public interface WordMapper extends BaseMapper<Word> {
 
+    Word getRandomOne();
 }

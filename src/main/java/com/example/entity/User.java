@@ -1,12 +1,28 @@
 package com.example.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import java.io.Serializable;
 import lombok.Data;
-import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
+/**
+ * <p>
+ * 
+ * </p>
+ *
+ * @author wcf
+ * @since 2022-04-08
+ */
 @Data
-@Table(name = "user")
-public class User {
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+public class User implements Serializable {
 
+    private static final long serialVersionUID=1L;
+
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     private String nick;
@@ -17,5 +33,7 @@ public class User {
 
     private String imgUrl;
 
-    private Character sex;
+    private Integer sex;
+
+
 }

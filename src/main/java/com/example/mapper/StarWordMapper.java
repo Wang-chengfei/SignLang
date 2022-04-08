@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.User;
+import com.example.entity.StarWord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * @since 2022-04-08
  */
 @Repository
-public interface UserMapper extends BaseMapper<User> {
+public interface StarWordMapper extends BaseMapper<StarWord> {
 
 }

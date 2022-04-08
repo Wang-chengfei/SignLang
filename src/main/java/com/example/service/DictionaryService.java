@@ -1,7 +1,9 @@
 package com.example.service;
 
-import com.example.entity.User;
+import com.example.entity.Dictionary;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -11,6 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author wcf
  * @since 2022-04-08
  */
-public interface UserService extends IService<User> {
-    User query(Integer id);
+public interface DictionaryService extends IService<Dictionary> {
+
+    List<Dictionary> queryAll();
 }

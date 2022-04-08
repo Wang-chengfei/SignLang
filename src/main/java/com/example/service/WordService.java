@@ -11,9 +11,13 @@ import java.util.List;
  * </p>
  *
  * @author wcf
- * @since 2022-03-27
+ * @since 2022-04-08
  */
 public interface WordService extends IService<Word> {
 
-    List<Word> queryAllWord();
+    Word getRandomOne();
+
+    Word queryOne(Integer id);
+
+    List<Word> getTodayWord(Integer userId);
 }
