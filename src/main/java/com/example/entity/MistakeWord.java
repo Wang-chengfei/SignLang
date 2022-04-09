@@ -29,7 +29,5 @@ public class MistakeWord implements Serializable {
 
     private Integer userId;
 
-    private Integer planId;
-
 
 }

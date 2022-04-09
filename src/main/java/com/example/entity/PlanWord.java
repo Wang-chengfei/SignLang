@@ -36,6 +36,10 @@ public class PlanWord implements Serializable {
 
     private LocalDate studyTime;
 
+    private Boolean isStar;
+
+    private Boolean isMistake;
+
     @Override
     public boolean equals(Object obj) {
         //判断是否为同一对象

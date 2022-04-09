@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MistakeWordService extends IService<MistakeWord> {
 
+    int add(Integer userId, Integer wordId, Integer planId);
 }

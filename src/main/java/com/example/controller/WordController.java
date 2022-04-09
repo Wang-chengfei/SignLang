@@ -1,6 +1,7 @@
 package com.example.controller;
 
 
+import com.example.entity.PlanWord;
 import com.example.entity.Word;
 import com.example.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  *  前端控制器
@@ -49,8 +52,18 @@ public class WordController {
      *
      */
     @RequestMapping(value = "/getTodayWord", method = RequestMethod.GET)
-    public List<Word> getTodayWord(@RequestParam("userId") Integer userId) {
+    public Map<PlanWord, Word> getTodayWord(@RequestParam("userId") Integer userId) {
         return wordService.getTodayWord(userId);
+    }
+
+    /**
+    * 描述:完成若干个单词的学习
+    *
+    */
+    @RequestMapping(value = "/completeWord", method = RequestMethod.POST)
+    public boolean completeWord(@RequestParam("userId") Integer userId,
+                            @RequestParam("wordIds") List<Integer> wordIds) {
+        return wordService.completeWord(userId, wordIds);
     }
 }
 

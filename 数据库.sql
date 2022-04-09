@@ -82,6 +82,8 @@ create table `plan_word`
     `word_id`    int,
     `completed`  bool default false,
     `study_time` date, -- 单词学习时间
+	`is_star`    bool default false,
+	`is_mistake` bool default false,
     foreign key (`plan_id`) references `plan` (`id`),
     foreign key (`word_id`) references `word` (`id`)
 );
@@ -95,10 +97,8 @@ create table `mistake_word`
     `id`      int primary key auto_increment,
     `word_id` int,
     `user_id` int,
-    `plan_id` int,
     foreign key (`word_id`) references `word` (`id`),
-    foreign key (`user_id`) references `user` (`id`),
-    foreign key (`plan_id`) references `plan` (`id`)
+    foreign key (`user_id`) references `user` (`id`)
 );
 
 
