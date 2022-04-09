@@ -65,5 +65,14 @@ public class WordController {
                             @RequestParam("wordIds") List<Integer> wordIds) {
         return wordService.completeWord(userId, wordIds);
     }
+
+    /**
+     * 描述:获取今日已学习单词数
+     *
+     */
+    @RequestMapping(value = "/getTodayLearned", method = RequestMethod.GET)
+    public int getTodayLearned(@RequestParam("userId") Integer userId) {
+        return wordService.getTodayLearned(userId);
+    }
 }
 

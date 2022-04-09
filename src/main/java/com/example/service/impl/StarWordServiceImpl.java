@@ -35,18 +35,27 @@ public class StarWordServiceImpl extends ServiceImpl<StarWordMapper, StarWord> i
 
     @Override
     public int add(Integer userId, Integer wordId, Integer planId) {
-        //改动star_word表格
-        StarWord starWord = new StarWord();
-        starWord.setUserId(userId);
-        starWord.setWordId(wordId);
-        //改动plan_word表格
-        QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
-        planWordQueryWrapper.eq("plan_id", planId);
-        planWordQueryWrapper.eq("word_id", wordId);
-        PlanWord planWord = planWordMapper.selectOne(planWordQueryWrapper);
-        planWord.setIsStar(true);
-        planWordMapper.updateById(planWord);
-        return starWordMapper.insert(starWord);
+        int result = 0;
+        //检查star_word表中是否存在该单词
+        QueryWrapper<StarWord> starWordQueryWrapper = new QueryWrapper<>();
+        starWordQueryWrapper.eq("word_id", wordId);
+        starWordQueryWrapper.eq("user_id", userId);
+        StarWord starWord1 = starWordMapper.selectOne(starWordQueryWrapper);
+        if (starWord1 == null) {
+            //改动star_word表格
+            StarWord starWord = new StarWord();
+            starWord.setUserId(userId);
+            starWord.setWordId(wordId);
+            result = starWordMapper.insert(starWord);
+            //改动plan_word表格
+            QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
+            planWordQueryWrapper.eq("plan_id", planId);
+            planWordQueryWrapper.eq("word_id", wordId);
+            PlanWord planWord = planWordMapper.selectOne(planWordQueryWrapper);
+            planWord.setIsStar(true);
+            planWordMapper.updateById(planWord);
+        }
+        return result;
     }
 
     @Override

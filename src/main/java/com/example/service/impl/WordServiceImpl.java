@@ -119,4 +119,23 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
         return planWordService.updateBatchById(planWordList);
     }
 
+    /**
+     * 描述:获取今日已学习单词数
+     *
+     */
+    @Override
+    public int getTodayLearned(Integer userId) {
+        //找到用户进行中的计划
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        planQueryWrapper.eq("state", true);
+        Plan plan = planMapper.selectOne(planQueryWrapper);
+        Integer planId = plan.getId();
+        //查询今日已学习单词数
+        QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
+        planWordQueryWrapper.eq("plan_id", planId);
+        planWordQueryWrapper.eq("study_time", LocalDate.now());
+        return planWordMapper.selectCount(planWordQueryWrapper);
+    }
+
 }

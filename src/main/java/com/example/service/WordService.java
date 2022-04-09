@@ -24,4 +24,6 @@ public interface WordService extends IService<Word> {
     Map<PlanWord, Word> getTodayWord(Integer userId);
 
     boolean completeWord(Integer userId, List<Integer> wordIds);
+
+    int getTodayLearned(Integer userId);
 }
