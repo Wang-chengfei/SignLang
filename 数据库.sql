@@ -30,7 +30,8 @@ create table `dictionary`
     `id`           int primary key auto_increment,
     `name`         varchar(30),
     `description`  varchar(255),
-    `total_number` int -- 词典总词数
+    `total_number` int, -- 词典总词数
+	`img_url``     varchar(255)
 );
 
 
@@ -113,6 +114,19 @@ create table `star_word`
     foreign key (`word_id`) references `word` (`id`),
     foreign key (`user_id`) references `user` (`id`)
 );
+
+-- ----------------------------
+-- 打卡记录
+-- ----------------------------
+create table `card`
+(
+    `id`         int primary key auto_increment,
+    `user_id`    int,
+    `clock_time` date,
+    `amount`     int,
+    foreign key (`user_id`) references `user` (`id`)
+);
+
 
 insert into `user` values (1000, 'wcf', 'xxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxx', 'xxx.jpg', '1');
 insert into `user` values (1001, 'hjh', 'xxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxx', 'xxx.jpg', '1');

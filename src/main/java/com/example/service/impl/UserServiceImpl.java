@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.entity.User;
 import com.example.mapper.UserMapper;
 import com.example.service.UserService;
@@ -24,5 +25,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User query(Integer id) {
         return userMapper.selectById(id);
+    }
+
+    @Override
+    public User login(String openid, String sessionKey) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("openid", openid);
+        User user = userMapper.selectOne(userQueryWrapper);
+        //如果用户未注册，则注册
+        if (user == null) {
+            user = new User();
+            user.setOpenid(openid);
+            user.setSessionKey(sessionKey);
+            userMapper.insert(user);
+        }
+        //用户已注册，更新sessionKey
+        else {
+            user.setSessionKey(sessionKey);
+            userMapper.updateById(user);
+        }
+        return user;
     }
 }
