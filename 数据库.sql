@@ -68,6 +68,8 @@ create table `plan`
     `total_number`   int,                -- 计划总单词数
     `learned_number` int  default 0,     -- 已学习单词数
     `state`          bool default false, -- 计划是否在进行中 true进行中 false未进行
+	`last_time`		 data,				 -- 上次学习的时间
+	`today_amount`   int,				 -- 今天学习的单词数
     foreign key (`user_id`) references `user` (`id`),
     foreign key (`dictionary_id`) references `dictionary` (`id`)
 );

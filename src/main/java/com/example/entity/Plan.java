@@ -44,5 +44,8 @@ public class Plan implements Serializable {
 
     private Boolean state;
 
+    private LocalDate lastTime;
+
+    private Integer todayAmount;
 
 }

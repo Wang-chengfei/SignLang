@@ -74,5 +74,26 @@ public class WordController {
     public int getTodayLearned(@RequestParam("userId") Integer userId) {
         return wordService.getTodayLearned(userId);
     }
+
+
+    /**
+     * 描述:增加今天学习的单词数量
+     *
+     */
+    @RequestMapping(value = "/addTodayWord", method = RequestMethod.POST)
+    public int addTodayWord(@RequestParam("userId") Integer userId,
+                            @RequestParam("addAmount") Integer addAmount) {
+
+        return wordService.addTodayWord(userId, addAmount);
+    }
+
+    /**
+     * 描述:单词查询
+     *
+     */
+    @RequestMapping(value = "/find", method = RequestMethod.GET)
+    public List<Word> find(@RequestParam("findWord") String findWord) {
+        return wordService.find(findWord);
+    }
 }
 

@@ -53,6 +53,7 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
      */
     @Override
     public Map<PlanWord, Word> getTodayWord(Integer userId) {
+        LocalDate today = LocalDate.now();
         //找到用户进行中的计划
         QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
         planQueryWrapper.eq("user_id", userId);
@@ -61,6 +62,15 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
         Integer planId = plan.getId();
         Integer amount = plan.getAmount();
         Integer pOrder = plan.getPOrder();
+        LocalDate lastTime = plan.getLastTime();
+        if (!today.equals(lastTime)) {
+            plan.setLastTime(today);
+            plan.setTodayAmount(amount);
+            planMapper.updateById(plan);
+        }
+        else {
+            amount = plan.getTodayAmount();
+        }
         //找到计划中的单词
         QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
         planWordQueryWrapper.eq("plan_id", planId);
@@ -99,6 +109,7 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
      */
     @Override
     public boolean completeWord(Integer userId, List<Integer> wordIds) {
+        int count = 0;
         //找到用户进行中的计划
         QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
         planQueryWrapper.eq("user_id", userId);
@@ -113,9 +124,15 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
         //更新为已完成状态
         final LocalDate now = LocalDate.now();
         for (PlanWord planWord : planWordList) {
-            planWord.setCompleted(true);
+            if (planWord.getCompleted() == false) {
+                count++;
+                planWord.setCompleted(true);
+            }
             planWord.setStudyTime(now);
         }
+        //更新plan表格中已完成的单词数
+        plan.setLearnedNumber(plan.getLearnedNumber() + count);
+        planMapper.updateById(plan);
         return planWordService.updateBatchById(planWordList);
     }
 
@@ -136,6 +153,42 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
         planWordQueryWrapper.eq("plan_id", planId);
         planWordQueryWrapper.eq("study_time", LocalDate.now());
         return planWordMapper.selectCount(planWordQueryWrapper);
+    }
+
+    /**
+     * 描述:增加今天学习的单词数量
+     *
+     */
+    @Override
+    public int addTodayWord(Integer userId, Integer addAmount) {
+        LocalDate today = LocalDate.now();
+        //找到用户进行中的计划
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        planQueryWrapper.eq("state", true);
+        Plan plan = planMapper.selectOne(planQueryWrapper);
+        //更新今日单词数
+        LocalDate lastTime = plan.getLastTime();
+        if (!today.equals(lastTime)) {
+            plan.setLastTime(today);
+            plan.setTodayAmount(plan.getAmount() + addAmount);
+        }
+        else {
+            plan.setTodayAmount(plan.getTodayAmount() + addAmount);
+        }
+        return planMapper.updateById(plan);
+    }
+
+
+    /**
+     * 描述：单词查询
+     *
+     */
+    @Override
+    public List<Word> find(String findWord) {
+        QueryWrapper<Word> wordQueryWrapper = new QueryWrapper<>();
+        wordQueryWrapper.like("answer", findWord);
+        return wordMapper.selectList(wordQueryWrapper);
     }
 
 }

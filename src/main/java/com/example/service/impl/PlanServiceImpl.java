@@ -74,6 +74,8 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
         plan.setCompleted(false);
         plan.setLearnedNumber(0);
         plan.setState(false);
+        plan.setLastTime(LocalDate.now());
+        plan.setTodayAmount(plan.getAmount());
         //获取并设置计划的总单词数
         QueryWrapper<Dictionary> dictionaryQueryWrapper = new QueryWrapper<>();
         dictionaryQueryWrapper.eq("id", plan.getDictionaryId());

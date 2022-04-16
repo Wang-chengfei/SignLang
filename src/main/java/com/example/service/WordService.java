@@ -26,4 +26,8 @@ public interface WordService extends IService<Word> {
     boolean completeWord(Integer userId, List<Integer> wordIds);
 
     int getTodayLearned(Integer userId);
+
+    int addTodayWord(Integer userId, Integer addAmount);
+
+    List<Word> find(String findWord);
 }
