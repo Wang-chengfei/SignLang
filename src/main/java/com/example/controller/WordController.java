@@ -2,6 +2,7 @@ package com.example.controller;
 
 
 import com.example.entity.PlanWord;
+import com.example.entity.PlanWordReturn;
 import com.example.entity.Word;
 import com.example.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class WordController {
      *
      */
     @RequestMapping(value = "/getTodayWord", method = RequestMethod.GET)
-    public Map<PlanWord, Word> getTodayWord(@RequestParam("userId") Integer userId) {
+    public List<PlanWordReturn> getTodayWord(@RequestParam("userId") Integer userId) {
         return wordService.getTodayWord(userId);
     }
 

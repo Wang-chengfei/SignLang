@@ -1,9 +1,7 @@
 package com.example.service;
 
-import com.example.entity.Plan;
+import com.example.entity.*;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.entity.PlanWord;
-import com.example.entity.Word;
 
 import java.util.List;
 import java.util.Map;
@@ -18,9 +16,9 @@ import java.util.Map;
  */
 public interface PlanService extends IService<Plan> {
 
-    List<Plan> queryAll(Integer userId);
+    List<PlanReturn> queryAll(Integer userId);
 
-    Plan queryNow(Integer userId);
+    PlanReturn queryNow(Integer userId);
 
     int add(Plan plan);
 
@@ -30,5 +28,5 @@ public interface PlanService extends IService<Plan> {
 
     int switchPlan(Integer id);
 
-    Map<PlanWord, Word> queryAllWord(Integer id);
+    List<PlanWordReturn> queryAllWord(Integer id);
 }

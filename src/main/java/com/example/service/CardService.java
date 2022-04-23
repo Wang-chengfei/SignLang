@@ -13,9 +13,11 @@ import java.util.List;
  */
 public interface CardService extends IService<Card> {
 
-    int clock(Integer userId, Integer amount);
+    int clock(Integer userId);
 
     List<Card> queryAll(Integer userId);
 
     Card queryToday(Integer userId);
+
+    Integer queryCardDays(Integer userId);
 }

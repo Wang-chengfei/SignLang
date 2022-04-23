@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.swing.text.StyledEditorKit;
+
 /**
  * <p>
  * 
@@ -32,5 +34,6 @@ public class Card implements Serializable {
 
     private Integer amount;
 
+    private Boolean completed;
 
 }

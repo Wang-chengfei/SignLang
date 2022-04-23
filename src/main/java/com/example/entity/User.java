@@ -25,15 +25,8 @@ public class User implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String nick;
-
     private String openid;
 
     private String sessionKey;
-
-    private String imgUrl;
-
-    private Integer sex;
-
 
 }

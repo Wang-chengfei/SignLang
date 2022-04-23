@@ -1,9 +1,7 @@
 package com.example.controller;
 
 
-import com.example.entity.Plan;
-import com.example.entity.PlanWord;
-import com.example.entity.Word;
+import com.example.entity.*;
 import com.example.service.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +29,7 @@ public class PlanController {
      *
      */
     @RequestMapping(value = "queryAll", method = RequestMethod.GET)
-    public List<Plan> queryAll(@RequestParam("userId") Integer userId) {
+    public List<PlanReturn> queryAll(@RequestParam("userId") Integer userId) {
         return planService.queryAll(userId);
     }
 
@@ -40,7 +38,7 @@ public class PlanController {
      *
      */
     @RequestMapping(value = "queryNow", method = RequestMethod.GET)
-    public Plan queryNow(@RequestParam("userId") Integer userId) {
+    public PlanReturn queryNow(@RequestParam("userId") Integer userId) {
         return planService.queryNow(userId);
     }
 
@@ -87,7 +85,7 @@ public class PlanController {
      *
      */
     @RequestMapping(value = "queryAllWord", method = RequestMethod.GET)
-    public Map<PlanWord, Word> queryAllWord(@RequestParam("id") Integer id) {
+    public List<PlanWordReturn> queryAllWord(@RequestParam("id") Integer id) {
         return planService.queryAllWord(id);
     }
 

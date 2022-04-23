@@ -16,4 +16,6 @@ import java.util.List;
 public interface DictionaryService extends IService<Dictionary> {
 
     List<Dictionary> queryAll();
+
+    List<Dictionary> queryRest(Integer userId);
 }

@@ -1,14 +1,13 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.entity.*;
 import com.example.entity.Dictionary;
-import com.example.entity.Plan;
-import com.example.entity.PlanWord;
-import com.example.entity.Word;
 import com.example.mapper.DictionaryMapper;
 import com.example.mapper.PlanMapper;
 import com.example.mapper.PlanWordMapper;
 import com.example.mapper.WordMapper;
+import com.example.service.DictionaryService;
 import com.example.service.PlanService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.service.PlanWordService;
@@ -32,7 +31,11 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
     @Autowired
     private PlanMapper planMapper;
     @Autowired
+    private PlanService planService;
+    @Autowired
     private DictionaryMapper dictionaryMapper;
+    @Autowired
+    private DictionaryService dictionaryService;
     @Autowired
     private WordMapper wordMapper;
     @Autowired
@@ -45,10 +48,22 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
      *
      */
     @Override
-    public List<Plan> queryAll(Integer userId) {
-        QueryWrapper<Plan> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
-        return planMapper.selectList(wrapper);
+    public List<PlanReturn> queryAll(Integer userId) {
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        List<Plan> plans = planMapper.selectList(planQueryWrapper);
+        if (plans.size() == 0) return null;
+        List<PlanReturn> planReturns = new ArrayList<>();
+        for (Plan plan : plans) {
+            PlanReturn planReturn = new PlanReturn(plan);
+            planReturns.add(planReturn);
+        }
+        //获取计划对应的词典
+        for (PlanReturn planReturn : planReturns) {
+            Dictionary dictionary = dictionaryMapper.selectById(planReturn.getDictionaryId());
+            planReturn.setDictionary(dictionary);
+        }
+        return planReturns;
     }
 
     /**
@@ -56,11 +71,20 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
      *
      */
     @Override
-    public Plan queryNow(Integer userId) {
-        QueryWrapper<Plan> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
-        wrapper.eq("state", true);
-        return planMapper.selectOne(wrapper);
+    public PlanReturn queryNow(Integer userId) {
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        planQueryWrapper.eq("state", true);
+        Plan plan = planMapper.selectOne(planQueryWrapper);
+        if (plan == null) return null;
+        PlanReturn planReturn = new PlanReturn(plan);
+        //获取计划对应的词典
+        Integer dictionaryId = plan.getDictionaryId();
+        QueryWrapper<Dictionary> dictionaryQueryWrapper = new QueryWrapper<>();
+        dictionaryQueryWrapper.eq("id", dictionaryId);
+        Dictionary dictionary = dictionaryMapper.selectOne(dictionaryQueryWrapper);
+        planReturn.setDictionary(dictionary);
+        return planReturn;
     }
 
     /**
@@ -136,9 +160,13 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
         QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
         planQueryWrapper.eq("user_id", userId);
         planQueryWrapper.eq("state", true);
-        Plan previousPlan = planMapper.selectOne(planQueryWrapper);
-        previousPlan.setState(false);
-        planMapper.updateById(previousPlan);
+        List<Plan> previousPlan = planMapper.selectList(planQueryWrapper);
+        for (Plan plan1 : previousPlan) {
+            plan1.setState(false);
+        }
+        if (previousPlan.size() > 0) {
+            planService.updateBatchById(previousPlan);
+        }
         return planMapper.updateById(plan);
     }
 
@@ -147,8 +175,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
      *
      */
     @Override
-    public Map<PlanWord, Word> queryAllWord(Integer id) {
-        Map<PlanWord, Word> map = new LinkedHashMap<>();
+    public List<PlanWordReturn> queryAllWord(Integer id) {
         //查找出所有plan_word
         QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
         planWordQueryWrapper.eq("plan_id", id);
@@ -159,11 +186,14 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
             wordIdList.add(planWord.getWordId());
         }
         List<Word> wordList = wordMapper.selectBatchIds(wordIdList);
-        //整合为map
+        //整合为planWordReturn
+        List<PlanWordReturn> planWordReturnList = new ArrayList<>();
         int size = wordList.size();
         for (int i = 0; i < size; i++) {
-            map.put(planWordList.get(i), wordList.get(i));
+            PlanWordReturn planWordReturn = new PlanWordReturn(planWordList.get(i));
+            planWordReturn.setWord(wordList.get(i));
+            planWordReturnList.add(planWordReturn);
         }
-        return map;
+        return planWordReturnList;
     }
 }

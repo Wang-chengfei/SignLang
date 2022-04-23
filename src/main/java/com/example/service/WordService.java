@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.entity.PlanWord;
+import com.example.entity.PlanWordReturn;
 import com.example.entity.Word;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -21,7 +22,7 @@ public interface WordService extends IService<Word> {
 
     Word queryOne(Integer id);
 
-    Map<PlanWord, Word> getTodayWord(Integer userId);
+    List<PlanWordReturn> getTodayWord(Integer userId);
 
     boolean completeWord(Integer userId, List<Integer> wordIds);
 

@@ -31,9 +31,8 @@ public class CardController {
      *
      */
     @RequestMapping(value = "/clock", method = RequestMethod.POST)
-    public int clock(@RequestParam("userId") Integer userId,
-                     @RequestParam("amount") Integer amount) {
-        return cardService.clock(userId, amount);
+    public int clock(@RequestParam("userId") Integer userId) {
+        return cardService.clock(userId);
     }
 
     /**
@@ -52,6 +51,15 @@ public class CardController {
     @RequestMapping(value = "/queryToday", method = RequestMethod.GET)
     public Card queryToday(@RequestParam("userId") Integer userId) {
         return cardService.queryToday(userId);
+    }
+
+    /**
+     * 描述:获取连续打卡天数
+     *
+     */
+    @RequestMapping(value = "/queryCardDays", method = RequestMethod.GET)
+    public Integer queryCardDays(@RequestParam("userId") Integer userId) {
+        return cardService.queryCardDays(userId);
     }
 }
 

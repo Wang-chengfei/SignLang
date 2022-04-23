@@ -14,11 +14,8 @@ datasource:
 create table `user`
 (
     `id`          int primary key auto_increment,
-    `nick`        varchar(255),
     `openid`      varchar(255),
     `session_key` varchar(255),
-    `img_url`     varchar(255),
-    `sex`         int
 );
 
 
@@ -126,6 +123,7 @@ create table `card`
     `user_id`    int,
     `clock_time` date,
     `amount`     int,
+	`completed`  bool default true, -- 是否完成
     foreign key (`user_id`) references `user` (`id`)
 );
 

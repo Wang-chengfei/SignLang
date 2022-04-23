@@ -16,4 +16,16 @@
         <result column="state" property="state" />
     </resultMap>
 
+    <select id="mySelectOne" parameterType="java.lang.Object" resultType="com.example.entity.Plan">
+        select *
+        from `plan`
+        where `user_id`=#{userId} and `state`=#{state}
+    </select>
+
+    <select id="mySelectList" parameterType="java.lang.Object" resultType="com.example.entity.Plan">
+        select *
+        from `plan`
+        where `user_id`=#{userId}
+    </select>
+
 </mapper>

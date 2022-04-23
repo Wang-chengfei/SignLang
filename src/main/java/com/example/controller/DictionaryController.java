@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,6 +30,12 @@ public class DictionaryController {
     @RequestMapping(value = "queryAll", method = RequestMethod.GET)
     public List<Dictionary> queryAll() {
         return dictionaryService.queryAll();
+    }
+
+    //查询用户还没有添加计划的词典
+    @RequestMapping(value = "queryRest", method = RequestMethod.GET)
+    public List<Dictionary> queryRest(@RequestParam("userId") Integer userId) {
+        return dictionaryService.queryRest(userId);
     }
 
 }

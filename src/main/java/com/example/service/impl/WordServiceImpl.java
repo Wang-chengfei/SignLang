@@ -3,6 +3,7 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.entity.Plan;
 import com.example.entity.PlanWord;
+import com.example.entity.PlanWordReturn;
 import com.example.entity.Word;
 import com.example.mapper.PlanMapper;
 import com.example.mapper.PlanWordMapper;
@@ -52,13 +53,10 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
      *
      */
     @Override
-    public Map<PlanWord, Word> getTodayWord(Integer userId) {
+    public List<PlanWordReturn> getTodayWord(Integer userId) {
         LocalDate today = LocalDate.now();
         //找到用户进行中的计划
-        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
-        planQueryWrapper.eq("user_id", userId);
-        planQueryWrapper.eq("state", true);
-        Plan plan = planMapper.selectOne(planQueryWrapper);
+        Plan plan = planMapper.mySelectOne(userId, true);
         Integer planId = plan.getId();
         Integer amount = plan.getAmount();
         Integer pOrder = plan.getPOrder();
@@ -87,20 +85,23 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
             planWordQueryWrapper.last("order by study_time desc, rand(1) limit " + amount);
         }
         List<PlanWord> planWordList = planWordMapper.selectList(planWordQueryWrapper);
+        if (planWordList.size() == 0) return null;
         //根据plan_word找到word
         List<Integer> idList = new ArrayList<>();
         for (PlanWord planWord : planWordList) {
             idList.add(planWord.getWordId());
         }
         List<Word> wordList = wordMapper.selectBatchIds(idList);
-        //生成Map<PlanWord, Word>并返回
-        Map<PlanWord, Word> planWordWordMap = new LinkedHashMap<>();
+        //planWordReturn中增加word变量
+        List<PlanWordReturn> planWordReturnList = new ArrayList<>();
         for (PlanWord planWord : planWordList) {
             Integer wordId = planWord.getWordId();
             Word word = wordList.stream().filter(item -> item.getId().equals(wordId)).collect(Collectors.toList()).get(0);
-            planWordWordMap.put(planWord, word);
+            PlanWordReturn planWordReturn = new PlanWordReturn(planWord);
+            planWordReturn.setWord(word);
+            planWordReturnList.add(planWordReturn);
         }
-        return planWordWordMap;
+        return planWordReturnList;
     }
 
     /**
