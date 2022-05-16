@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.entity.Dictionary;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.entity.Word;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface DictionaryService extends IService<Dictionary> {
     List<Dictionary> queryAll();
 
     List<Dictionary> queryRest(Integer userId);
+
+    List<Word> getAllWord(Integer dictionaryId);
 }

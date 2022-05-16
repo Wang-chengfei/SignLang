@@ -6,6 +6,7 @@ import com.example.service.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -85,8 +86,18 @@ public class PlanController {
      *
      */
     @RequestMapping(value = "queryAllWord", method = RequestMethod.GET)
-    public List<PlanWordReturn> queryAllWord(@RequestParam("id") Integer id) {
-        return planService.queryAllWord(id);
+    public List<PlanWordReturn> queryAllWord(@RequestParam("id") Integer id,
+                                             @RequestParam(value = "completed", required = false) Integer completed) {
+        return planService.queryAllWord(id, completed);
+    }
+
+    /**
+     * 描述:查询计划中的已学习单词（按日期划分）
+     *
+     */
+    @RequestMapping(value = "queryCompletedWord", method = RequestMethod.GET)
+    public Map<LocalDate, List<PlanWordReturn>> queryCompletedWord(@RequestParam("id") Integer id) {
+        return planService.queryCompletedWord(id);
     }
 
 }

@@ -32,8 +32,8 @@ public class UserController {
     private UserService userService;
 
     //在开发者平台中获取APPID和SECRET
-    private static final String APPID= "xxxxx";
-    private static final String SECRET = "xxxxxx";
+    private static final String APPID= "wxa1df0e770eb25d99";
+    private static final String SECRET = "2cd829651368498d712c3ba05f7bd6d5";
 
     /**
      * 描述:查询用户信息

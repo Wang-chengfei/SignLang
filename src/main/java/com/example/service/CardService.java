@@ -20,4 +20,10 @@ public interface CardService extends IService<Card> {
     Card queryToday(Integer userId);
 
     Integer queryCardDays(Integer userId);
+
+    Integer queryLearnedWord(Integer userId);
+
+    Integer queryLearnedDay(Integer userId);
+
+    int cancelClock(Integer userId);
 }

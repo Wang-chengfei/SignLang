@@ -72,7 +72,7 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
         //找到计划中的单词
         QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
         planWordQueryWrapper.eq("plan_id", planId);
-        planWordQueryWrapper.eq("study_time", LocalDate.now()).or().isNull("study_time");
+        planWordQueryWrapper.and(QueryWrapper -> QueryWrapper.eq("study_time", LocalDate.now()).or().isNull("study_time"));
         if (pOrder == 1) {
             planWordQueryWrapper.orderByDesc("study_time").orderByAsc("word_id");
             planWordQueryWrapper.last("limit " + amount);
@@ -85,6 +85,7 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
             planWordQueryWrapper.last("order by study_time desc, rand(1) limit " + amount);
         }
         List<PlanWord> planWordList = planWordMapper.selectList(planWordQueryWrapper);
+        System.out.println(planWordList);
         if (planWordList.size() == 0) return null;
         //根据plan_word找到word
         List<Integer> idList = new ArrayList<>();

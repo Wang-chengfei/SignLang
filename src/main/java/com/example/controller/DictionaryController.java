@@ -2,6 +2,7 @@ package com.example.controller;
 
 
 import com.example.entity.Dictionary;
+import com.example.entity.Word;
 import com.example.service.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,12 @@ public class DictionaryController {
     @RequestMapping(value = "queryRest", method = RequestMethod.GET)
     public List<Dictionary> queryRest(@RequestParam("userId") Integer userId) {
         return dictionaryService.queryRest(userId);
+    }
+
+    //查询词典中所有的单词
+    @RequestMapping(value = "getAllWord", method = RequestMethod.GET)
+    public List<Word> getAllWord(@RequestParam("dictionaryId") Integer dictionaryId) {
+        return dictionaryService.getAllWord(dictionaryId);
     }
 
 }

@@ -47,14 +47,14 @@ public class StarWordServiceImpl extends ServiceImpl<StarWordMapper, StarWord> i
             starWord.setUserId(userId);
             starWord.setWordId(wordId);
             result = starWordMapper.insert(starWord);
-            //改动plan_word表格
-            QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
-            planWordQueryWrapper.eq("plan_id", planId);
-            planWordQueryWrapper.eq("word_id", wordId);
-            PlanWord planWord = planWordMapper.selectOne(planWordQueryWrapper);
-            planWord.setIsStar(true);
-            planWordMapper.updateById(planWord);
         }
+        //改动plan_word表格
+        QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
+        planWordQueryWrapper.eq("plan_id", planId);
+        planWordQueryWrapper.eq("word_id", wordId);
+        PlanWord planWord = planWordMapper.selectOne(planWordQueryWrapper);
+        planWord.setIsStar(true);
+        planWordMapper.updateById(planWord);
         return result;
     }
 

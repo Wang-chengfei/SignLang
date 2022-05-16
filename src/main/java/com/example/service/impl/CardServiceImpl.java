@@ -106,11 +106,55 @@ public class CardServiceImpl extends ServiceImpl<CardMapper, Card> implements Ca
             while(idx > 0) {
                 idx--;
                 lastTime = lastTime.minusDays(1);
-                if (lastTime.equals(cards.get(idx))) count++;
+                if (lastTime.equals(cards.get(idx).getClockTime())) count++;
                 else break;
             }
             return count;
         }
         return 0;
+    }
+
+    /**
+     * 描述:获取累计学习单词数
+     *
+     */
+    @Override
+    public Integer queryLearnedWord(Integer userId) {
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        List<Plan> plans = planMapper.selectList(planQueryWrapper);
+        int count = 0;
+        for (Plan plan : plans) {
+            count += plan.getLearnedNumber();
+        }
+        return count;
+    }
+
+    /**
+     * 描述:获取累计学习天数
+     *
+     */
+    @Override
+    public Integer queryLearnedDay(Integer userId) {
+        QueryWrapper<Card> cardQueryWrapper = new QueryWrapper<>();
+        cardQueryWrapper.eq("user_id", userId);
+        cardQueryWrapper.eq("completed", true);
+        List<Card> cards = cardMapper.selectList(cardQueryWrapper);
+        return cards.size();
+    }
+
+    /**
+     * 描述:取消今日打卡
+     *
+     */
+    @Override
+    public int cancelClock(Integer userId) {
+        QueryWrapper<Card> cardQueryWrapper = new QueryWrapper<>();
+        cardQueryWrapper.eq("user_id", userId);
+        cardQueryWrapper.eq("clock_time", LocalDate.now());
+        Card card = cardMapper.selectOne(cardQueryWrapper);
+        if (card == null) return 0;
+        card.setCompleted(false);
+        return cardMapper.updateById(card);
     }
 }

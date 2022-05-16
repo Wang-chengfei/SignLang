@@ -50,14 +50,14 @@ public class MistakeWordServiceImpl extends ServiceImpl<MistakeWordMapper, Mista
             mistakeWord.setWordId(wordId);
             mistakeWord.setUserId(userId);
             result = mistakeWordMapper.insert(mistakeWord);
-            //改动plan_word表格
-            QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
-            planWordQueryWrapper.eq("plan_id", planId);
-            planWordQueryWrapper.eq("word_id", wordId);
-            PlanWord planWord = planWordMapper.selectOne(planWordQueryWrapper);
-            planWord.setIsMistake(true);
-            planWordMapper.updateById(planWord);
         }
+        //改动plan_word表格
+        QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
+        planWordQueryWrapper.eq("plan_id", planId);
+        planWordQueryWrapper.eq("word_id", wordId);
+        PlanWord planWord = planWordMapper.selectOne(planWordQueryWrapper);
+        planWord.setIsMistake(true);
+        planWordMapper.updateById(planWord);
         return result;
     }
 

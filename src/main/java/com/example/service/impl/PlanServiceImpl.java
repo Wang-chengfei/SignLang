@@ -106,12 +106,22 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
         Dictionary dictionary = dictionaryMapper.selectOne(dictionaryQueryWrapper);
         int totalNumber = dictionary.getTotalNumber();
         plan.setTotalNumber(totalNumber);
+        //若用户没有进行中的计划，则将改计划设为进行中
+        Integer userId = plan.getUserId();
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        planQueryWrapper.eq("state", true);
+        if (planMapper.selectOne(planQueryWrapper) == null) plan.setState(true);
         //向plan表中插入数据
         int result = planMapper.insert(plan);
         int planId = plan.getId();
         //向plan_word表中添加数据
         QueryWrapper<Word> wordQueryWrapper = new QueryWrapper<>();
-        wordQueryWrapper.eq("dictionary_id", plan.getDictionaryId());
+        List<Integer> dictionaryIds = new ArrayList<>();
+        for (int i = 1; i <= plan.getDictionaryId(); i++) {
+            dictionaryIds.add(i);
+        }
+        wordQueryWrapper.in("dictionary_id", dictionaryIds);
         List<Word> wordList = wordMapper.selectList(wordQueryWrapper);
         List<PlanWord> planWordList = new ArrayList<>();
         for (Word word : wordList) {
@@ -175,10 +185,14 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
      *
      */
     @Override
-    public List<PlanWordReturn> queryAllWord(Integer id) {
+    public List<PlanWordReturn> queryAllWord(Integer id, Integer completed) {
         //查找出所有plan_word
         QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
         planWordQueryWrapper.eq("plan_id", id);
+        if (completed != null) {
+            if (completed == 0) planWordQueryWrapper.eq("completed", false);
+            else if (completed == 1) planWordQueryWrapper.eq("completed", true);
+        }
         List<PlanWord> planWordList = planWordMapper.selectList(planWordQueryWrapper);
         //根据plan_word查找出word
         List<Integer> wordIdList = new ArrayList<>();
@@ -195,5 +209,22 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
             planWordReturnList.add(planWordReturn);
         }
         return planWordReturnList;
+    }
+
+    /**
+     * 描述:查询计划中的已学习单词（按日期划分）
+     *
+     */
+    @Override
+    public Map<LocalDate, List<PlanWordReturn>> queryCompletedWord(Integer id) {
+        List<PlanWordReturn> list = queryAllWord(id, 1);
+        Map<LocalDate, List<PlanWordReturn>> map = new TreeMap<>();
+        for (PlanWordReturn planWordReturn : list) {
+            LocalDate studyTime = planWordReturn.getStudyTime();
+            List<PlanWordReturn> list1 = map.getOrDefault(studyTime, new ArrayList<>());
+            list1.add(planWordReturn);
+            map.put(studyTime, list1);
+        }
+        return map;
     }
 }

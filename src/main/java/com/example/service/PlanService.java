@@ -3,6 +3,7 @@ package com.example.service;
 import com.example.entity.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -28,5 +29,7 @@ public interface PlanService extends IService<Plan> {
 
     int switchPlan(Integer id);
 
-    List<PlanWordReturn> queryAllWord(Integer id);
+    List<PlanWordReturn> queryAllWord(Integer id, Integer completed);
+
+    Map<LocalDate, List<PlanWordReturn>> queryCompletedWord(Integer id);
 }

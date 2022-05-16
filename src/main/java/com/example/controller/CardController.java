@@ -61,5 +61,32 @@ public class CardController {
     public Integer queryCardDays(@RequestParam("userId") Integer userId) {
         return cardService.queryCardDays(userId);
     }
+
+    /**
+     * 描述:获取累计学习单词数
+     *
+     */
+    @RequestMapping(value = "/queryLearnedWord", method = RequestMethod.GET)
+    public Integer queryLearnedWord(@RequestParam("userId") Integer userId) {
+        return cardService.queryLearnedWord(userId);
+    }
+
+    /**
+     * 描述:获取累计学习天数
+     *
+     */
+    @RequestMapping(value = "/queryLearnedDay", method = RequestMethod.GET)
+    public Integer queryLearnedDay(@RequestParam("userId") Integer userId) {
+        return cardService.queryLearnedDay(userId);
+    }
+
+    /**
+     * 描述:取消今日打卡
+     *
+     */
+    @RequestMapping(value = "/cancelClock", method = RequestMethod.POST)
+    public int cancelClock(@RequestParam("userId") Integer userId) {
+        return cardService.cancelClock(userId);
+    }
 }
 
