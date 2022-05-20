@@ -3,15 +3,18 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.entity.Card;
 import com.example.entity.Plan;
+import com.example.entity.PlanWord;
 import com.example.mapper.CardMapper;
 import com.example.mapper.PlanMapper;
+import com.example.mapper.PlanWordMapper;
 import com.example.service.CardService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.Month;
+import java.util.*;
 
 /**
  * <p>
@@ -28,6 +31,8 @@ public class CardServiceImpl extends ServiceImpl<CardMapper, Card> implements Ca
     private CardMapper cardMapper;
     @Autowired
     private PlanMapper planMapper;
+    @Autowired
+    private PlanWordMapper planWordMapper;
 
     /**
      * 描述:今日打卡
@@ -156,5 +161,68 @@ public class CardServiceImpl extends ServiceImpl<CardMapper, Card> implements Ca
         if (card == null) return 0;
         card.setCompleted(false);
         return cardMapper.updateById(card);
+    }
+
+    /**
+     * 描述:按周统计已学习单词数
+     *
+     */
+    @Override
+    public Object queryLearnedByWeek(Integer userId) {
+        //获取用户所有计划id
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        List<Plan> plans = planMapper.selectList(planQueryWrapper);
+        List<Integer> planIds = new ArrayList<>();
+        for (Plan plan : plans) {
+            planIds.add(plan.getId());
+        }
+        //根据计划id在plan_word表中查询过去七天学习单词数量
+        Map<LocalDate, Integer> map = new TreeMap<>();
+        LocalDate date = LocalDate.now();
+        for (int i = 0; i < 7; i++) {
+            QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
+            planWordQueryWrapper.in("plan_id", planIds);
+            planWordQueryWrapper.eq("completed", true);
+            planWordQueryWrapper.eq("study_time", date);
+            Integer number = planWordMapper.selectCount(planWordQueryWrapper);
+            map.put(date, number);
+            date = date.minusDays(1);
+        }
+        return map;
+    }
+
+    /**
+     * 描述:按月统计已学习单词数
+     *
+     */
+    @Override
+    public Object queryLearnedByMonth(Integer userId) {
+        //获取用户所有计划id
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        List<Plan> plans = planMapper.selectList(planQueryWrapper);
+        List<Integer> planIds = new ArrayList<>();
+        for (Plan plan : plans) {
+            planIds.add(plan.getId());
+        }
+        //根据计划id在plan_word表中查询过去六个月的学习单词数量
+        Map<Integer, Integer> map = new HashMap<>();
+        LocalDate date = LocalDate.now();
+        for (int i = 0; i < 6; i++) {
+            int len = date.getDayOfMonth();
+            List<LocalDate> dates = new ArrayList<>();
+            for (int j = 0; j < len; j++) {
+                dates.add(date);
+                date = date.minusDays(1);
+            }
+            QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
+            planWordQueryWrapper.in("plan_id", planIds);
+            planWordQueryWrapper.eq("completed", true);
+            planWordQueryWrapper.in("study_time", dates);
+            Integer number = planWordMapper.selectCount(planWordQueryWrapper);
+            map.put(date.plusDays(1).getMonthValue(), number);
+        }
+        return map;
     }
 }

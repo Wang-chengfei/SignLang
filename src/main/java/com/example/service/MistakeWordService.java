@@ -22,7 +22,7 @@ public interface MistakeWordService extends IService<MistakeWord> {
 
     List<Word> queryAll(Integer userId);
 
-    int removeOne(Integer userId, Integer wordId, Integer planId);
+    int removeOne(Integer userId, Integer wordId);
 
-    int removeSeveral(Integer userId, List<Integer> wordIds, Integer planId);
+    int removeSeveral(Integer userId, List<Integer> wordIds);
 }

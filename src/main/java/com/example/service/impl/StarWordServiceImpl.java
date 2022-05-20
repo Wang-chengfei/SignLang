@@ -1,9 +1,11 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.entity.Plan;
 import com.example.entity.PlanWord;
 import com.example.entity.StarWord;
 import com.example.entity.Word;
+import com.example.mapper.PlanMapper;
 import com.example.mapper.PlanWordMapper;
 import com.example.mapper.StarWordMapper;
 import com.example.mapper.WordMapper;
@@ -32,9 +34,11 @@ public class StarWordServiceImpl extends ServiceImpl<StarWordMapper, StarWord> i
     private WordMapper wordMapper;
     @Autowired
     private PlanWordMapper planWordMapper;
+    @Autowired
+    private PlanMapper planMapper;
 
     @Override
-    public int add(Integer userId, Integer wordId, Integer planId) {
+    public int add(Integer userId, Integer wordId) {
         int result = 0;
         //检查star_word表中是否存在该单词
         QueryWrapper<StarWord> starWordQueryWrapper = new QueryWrapper<>();
@@ -48,13 +52,23 @@ public class StarWordServiceImpl extends ServiceImpl<StarWordMapper, StarWord> i
             starWord.setWordId(wordId);
             result = starWordMapper.insert(starWord);
         }
+        //获取用户所有计划id
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        List<Plan> plans = planMapper.selectList(planQueryWrapper);
+        List<Integer> planIds = new ArrayList<>();
+        for (Plan plan : plans) {
+            planIds.add(plan.getId());
+        }
         //改动plan_word表格
         QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
-        planWordQueryWrapper.eq("plan_id", planId);
+        planWordQueryWrapper.in("plan_id", planIds);
         planWordQueryWrapper.eq("word_id", wordId);
-        PlanWord planWord = planWordMapper.selectOne(planWordQueryWrapper);
-        planWord.setIsStar(true);
-        planWordMapper.updateById(planWord);
+        List<PlanWord> planWordList = planWordMapper.selectList(planWordQueryWrapper);
+        for (PlanWord planWord : planWordList) {
+            planWord.setIsStar(true);
+            planWordMapper.updateById(planWord);
+        }
         return result;
     }
 
@@ -72,14 +86,22 @@ public class StarWordServiceImpl extends ServiceImpl<StarWordMapper, StarWord> i
     }
 
     @Override
-    public int removeOne(Integer userId, Integer wordId, Integer planId) {
+    public int removeOne(Integer userId, Integer wordId) {
+        //找到用户所有的planId
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        List<Plan> plans = planMapper.selectList(planQueryWrapper);
+        List<Integer> planIds = new ArrayList<>();
+        for (Plan plan : plans) {
+            planIds.add(plan.getId());
+        }
         //改动star_word表格
         QueryWrapper<StarWord> starWordQueryWrapper = new QueryWrapper<>();
         starWordQueryWrapper.eq("user_id", userId);
         starWordQueryWrapper.eq("word_id", wordId);
         //改动plan_word表格
         QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
-        planWordQueryWrapper.eq("plan_id", planId);
+        planWordQueryWrapper.in("plan_id", planIds);
         planWordQueryWrapper.eq("word_id", wordId);
         PlanWord planWord = planWordMapper.selectOne(planWordQueryWrapper);
         planWord.setIsStar(false);

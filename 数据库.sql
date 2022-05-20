@@ -127,6 +127,21 @@ create table `card`
     foreign key (`user_id`) references `user` (`id`)
 );
 
+-- ----------------------------
+-- 文章
+-- ----------------------------
+create table `article`
+(
+    `id`        int primary key auto_increment,
+    `type`      varchar(30),
+    `title`     varchar(255),
+    `introduction`  varchar(500),
+    `content`   varchar(4000),
+    `label`     varchar(30),
+    `img_url`   varchar(255),
+    `video_url` varchar(255)
+)
+
 
 insert into `user` values (1000, 'wcf', 'xxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxx', 'xxx.jpg', '1');
 insert into `user` values (1001, 'hjh', 'xxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxx', 'xxx.jpg', '1');

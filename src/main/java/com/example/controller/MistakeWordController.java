@@ -63,9 +63,8 @@ public class MistakeWordController {
      */
     @RequestMapping(value = "removeOne", method = RequestMethod.POST)
     public int removeOne(@RequestParam("userId") Integer userId,
-                         @RequestParam("wordId") Integer wordId,
-                         @RequestParam("planId") Integer planId) {
-        return mistakeWordService.removeOne(userId, wordId, planId);
+                         @RequestParam("wordId") Integer wordId) {
+        return mistakeWordService.removeOne(userId, wordId);
     }
 
     /**
@@ -74,9 +73,8 @@ public class MistakeWordController {
      */
     @RequestMapping(value = "removeSeveral", method = RequestMethod.POST)
     public int removeSeveral(@RequestParam("userId") Integer userId,
-                             @RequestParam("wordIds") List<Integer> wordIds,
-                             @RequestParam("planId") Integer planId) {
-        return mistakeWordService.removeSeveral(userId, wordIds, planId);
+                             @RequestParam("wordIds") List<Integer> wordIds) {
+        return mistakeWordService.removeSeveral(userId, wordIds);
     }
 }
 

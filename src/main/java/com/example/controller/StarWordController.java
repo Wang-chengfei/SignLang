@@ -32,9 +32,8 @@ public class StarWordController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public int add(@RequestParam("userId") Integer userId,
-                   @RequestParam("wordId") Integer wordId,
-                   @RequestParam("planId") Integer planId) {
-        return starWordService.add(userId, wordId, planId);
+                   @RequestParam("wordId") Integer wordId) {
+        return starWordService.add(userId, wordId);
     }
 
     /**
@@ -52,9 +51,8 @@ public class StarWordController {
      */
     @RequestMapping(value = "/removeOne", method = RequestMethod.POST)
     public int removeOne(@RequestParam("userId") Integer userId,
-                         @RequestParam("wordId") Integer wordId,
-                         @RequestParam("planId") Integer planId) {
-        return starWordService.removeOne(userId, wordId, planId);
+                         @RequestParam("wordId") Integer wordId) {
+        return starWordService.removeOne(userId, wordId);
     }
 }
 

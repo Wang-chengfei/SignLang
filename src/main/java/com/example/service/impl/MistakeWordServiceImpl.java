@@ -3,6 +3,7 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.entity.*;
 import com.example.mapper.MistakeWordMapper;
+import com.example.mapper.PlanMapper;
 import com.example.mapper.PlanWordMapper;
 import com.example.mapper.WordMapper;
 import com.example.service.MistakeWordService;
@@ -35,6 +36,8 @@ public class MistakeWordServiceImpl extends ServiceImpl<MistakeWordMapper, Mista
     private PlanWordService planWordService;
     @Autowired
     private MistakeWordService mistakeWordService;
+    @Autowired
+    private PlanMapper planMapper;
 
     @Override
     public int add(Integer userId, Integer wordId, Integer planId) {
@@ -110,14 +113,22 @@ public class MistakeWordServiceImpl extends ServiceImpl<MistakeWordMapper, Mista
     }
 
     @Override
-    public int removeOne(Integer userId, Integer wordId, Integer planId) {
+    public int removeOne(Integer userId, Integer wordId) {
+        //找到用户所有的planId
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        List<Plan> plans = planMapper.selectList(planQueryWrapper);
+        List<Integer> planIds = new ArrayList<>();
+        for (Plan plan : plans) {
+            planIds.add(plan.getId());
+        }
         //改动mistake_word表格
         QueryWrapper<MistakeWord> mistakeWordQueryWrapper = new QueryWrapper<>();
         mistakeWordQueryWrapper.eq("user_id", userId);
         mistakeWordQueryWrapper.eq("word_id", wordId);
         //改动plan_word表格
         QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
-        planWordQueryWrapper.eq("plan_id", planId);
+        planWordQueryWrapper.in("plan_id", planIds);
         planWordQueryWrapper.eq("word_id", wordId);
         PlanWord planWord = planWordMapper.selectOne(planWordQueryWrapper);
         planWord.setIsMistake(false);
@@ -126,7 +137,15 @@ public class MistakeWordServiceImpl extends ServiceImpl<MistakeWordMapper, Mista
     }
 
     @Override
-    public int removeSeveral(Integer userId, List<Integer> wordIds, Integer planId) {
+    public int removeSeveral(Integer userId, List<Integer> wordIds) {
+        //找到用户所有的planId
+        QueryWrapper<Plan> planQueryWrapper = new QueryWrapper<>();
+        planQueryWrapper.eq("user_id", userId);
+        List<Plan> plans = planMapper.selectList(planQueryWrapper);
+        List<Integer> planIds = new ArrayList<>();
+        for (Plan plan : plans) {
+            planIds.add(plan.getId());
+        }
         int result;
         //改动mistake_word表格
         QueryWrapper<MistakeWord> mistakeWordQueryWrapper = new QueryWrapper<>();
@@ -135,7 +154,7 @@ public class MistakeWordServiceImpl extends ServiceImpl<MistakeWordMapper, Mista
         result = mistakeWordMapper.delete(mistakeWordQueryWrapper);
         //改动plan_word表格
         QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
-        planWordQueryWrapper.eq("plan_id", planId);
+        planWordQueryWrapper.in("plan_id", planIds);
         planWordQueryWrapper.in("word_id", wordIds);
         List<PlanWord> planWordList = planWordMapper.selectList(planWordQueryWrapper);
         for (PlanWord planWord : planWordList) {

@@ -16,9 +16,9 @@ import java.util.List;
  */
 public interface StarWordService extends IService<StarWord> {
 
-    int add(Integer userId, Integer wordId, Integer planId);
+    int add(Integer userId, Integer wordId);
 
     List<Word> queryAll(Integer userId);
 
-    int removeOne(Integer userId, Integer wordId, Integer planId);
+    int removeOne(Integer userId, Integer wordId);
 }

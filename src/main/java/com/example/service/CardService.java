@@ -26,4 +26,8 @@ public interface CardService extends IService<Card> {
     Integer queryLearnedDay(Integer userId);
 
     int cancelClock(Integer userId);
+
+    Object queryLearnedByWeek(Integer userId);
+
+    Object queryLearnedByMonth(Integer userId);
 }

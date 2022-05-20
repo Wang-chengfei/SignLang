@@ -88,5 +88,24 @@ public class CardController {
     public int cancelClock(@RequestParam("userId") Integer userId) {
         return cardService.cancelClock(userId);
     }
+
+    /**
+     * 描述:按周统计已学习单词数
+     *
+     */
+    @RequestMapping(value = "/queryLearnedByWeek", method = RequestMethod.GET)
+    public Object queryLearnedByWeek(@RequestParam("userId") Integer userId) {
+        return cardService.queryLearnedByWeek(userId);
+    }
+
+    /**
+     * 描述:按月统计已学习单词数
+     *
+     */
+    @RequestMapping(value = "/queryLearnedByMonth", method = RequestMethod.GET)
+    public Object queryLearnedByMonth(@RequestParam("userId") Integer userId) {
+        return cardService.queryLearnedByMonth(userId);
+    }
+
 }
 

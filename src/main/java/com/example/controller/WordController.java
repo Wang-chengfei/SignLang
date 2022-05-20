@@ -1,7 +1,6 @@
 package com.example.controller;
 
 
-import com.example.entity.PlanWord;
 import com.example.entity.PlanWordReturn;
 import com.example.entity.Word;
 import com.example.service.WordService;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
