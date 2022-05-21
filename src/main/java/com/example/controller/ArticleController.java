@@ -32,8 +32,10 @@ public class ArticleController {
      *
      */
     @RequestMapping(value = "/queryAll", method = RequestMethod.GET)
-    public List<Article> queryAll(@RequestParam(value = "type", required = false) String type) {
-        return articleService.queryAll(type);
+    public List<Article> queryAll(@RequestParam(value = "type", required = false) String type,
+                                  @RequestParam(value = "userId", required = false) Integer userId,
+                                  @RequestParam(value = "isStar", required = false) Integer isStar) {
+        return articleService.queryAll(type, userId, isStar);
     }
 
     /**
@@ -45,5 +47,35 @@ public class ArticleController {
         return articleService.queryOne(articleId);
     }
 
+    /**
+     * 描述:添加收藏文章
+     *
+     */
+    @RequestMapping(value = "/addStarArticle", method = RequestMethod.POST)
+    public Object addStarArticle(@RequestParam("userId") Integer userId,
+                                 @RequestParam("articleId") Integer articleId) {
+        return articleService.addStarArticle(userId, articleId);
+    }
+
+    /**
+     * 描述:取消收藏文章
+     *
+     */
+    @RequestMapping(value = "/cancelStarArticle", method = RequestMethod.POST)
+    public Object cancelStarArticle(@RequestParam("userId") Integer userId,
+                                    @RequestParam("articleId") Integer articleId) {
+        return articleService.cancelStarArticle(userId, articleId);
+    }
+
+
+    /**
+     * 描述:查询文章是否被收藏
+     *
+     */
+    @RequestMapping(value = "/queryStar", method = RequestMethod.GET)
+    public Boolean queryStar(@RequestParam("userId") Integer userId,
+                             @RequestParam("articleId") Integer articleId) {
+        return articleService.queryStar(userId, articleId);
+    }
 }
 

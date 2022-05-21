@@ -1,8 +1,7 @@
 package com.example.service;
 
-import com.example.entity.PlanWord;
+import com.example.entity.StarArticle;
 import com.baomidou.mybatisplus.extension.service.IService;
-
 
 /**
  * <p>
@@ -10,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author wcf
- * @since 2022-04-08
+ * @since 2022-05-21
  */
-public interface PlanWordService extends IService<PlanWord> {
+public interface StarArticleService extends IService<StarArticle> {
 
 }

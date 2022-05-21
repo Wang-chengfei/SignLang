@@ -114,6 +114,7 @@ create table `star_word`
     foreign key (`user_id`) references `user` (`id`)
 );
 
+
 -- ----------------------------
 -- 打卡记录
 -- ----------------------------
@@ -127,6 +128,7 @@ create table `card`
     foreign key (`user_id`) references `user` (`id`)
 );
 
+
 -- ----------------------------
 -- 文章
 -- ----------------------------
@@ -135,12 +137,23 @@ create table `article`
     `id`        int primary key auto_increment,
     `type`      varchar(30),
     `title`     varchar(255),
-    `introduction`  varchar(500),
+    `abstract`  varchar(500),
     `content`   varchar(4000),
     `label`     varchar(30),
     `img_url`   varchar(255),
     `video_url` varchar(255)
-)
+);
+
+
+-- ----------------------------
+-- 收藏文章
+-- ----------------------------
+create table `star_article`
+(
+    `id`         int primary key auto_increment,
+    `user_id`    int,
+    `article_id` int
+);
 
 
 insert into `user` values (1000, 'wcf', 'xxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxx', 'xxx.jpg', '1');

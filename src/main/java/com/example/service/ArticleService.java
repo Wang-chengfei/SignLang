@@ -15,7 +15,13 @@ import java.util.List;
  */
 public interface ArticleService extends IService<Article> {
 
-    List<Article> queryAll(String type);
+    List<Article> queryAll(String type, Integer userId, Integer isStar);
 
     Article queryOne(String articleId);
+
+    Object addStarArticle(Integer userId, Integer articleId);
+
+    Boolean queryStar(Integer userId, Integer articleId);
+
+    Object cancelStarArticle(Integer userId, Integer articleId);
 }

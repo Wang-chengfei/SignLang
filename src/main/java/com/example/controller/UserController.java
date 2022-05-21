@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.entity.User;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.*;
+
 
 /**
  * <p>
@@ -32,8 +36,25 @@ public class UserController {
     private UserService userService;
 
     //在开发者平台中获取APPID和SECRET
-    private static final String APPID= "wxa1df0e770eb25d99";
-    private static final String SECRET = "2cd829651368498d712c3ba05f7bd6d5";
+    private static String APPID;
+    private static String SECRET ;
+
+    //从文件中读取APPID与SECRET
+    static {
+        ClassPathResource classPathResource = new ClassPathResource("static/mini_program_info.txt");
+        try {
+            InputStream inputStream = classPathResource.getInputStream();
+            InputStreamReader reader = new InputStreamReader(inputStream);
+            BufferedReader buffReader = new BufferedReader(reader);
+            APPID = buffReader.readLine();
+            SECRET = buffReader.readLine();
+            System.out.println(APPID);
+            System.out.println(SECRET);
+            buffReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 描述:查询用户信息
