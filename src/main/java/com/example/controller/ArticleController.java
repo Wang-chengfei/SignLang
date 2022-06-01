@@ -77,5 +77,14 @@ public class ArticleController {
                              @RequestParam("articleId") Integer articleId) {
         return articleService.queryStar(userId, articleId);
     }
+
+    /**
+     * 描述:获取所有文章类型
+     *
+     */
+    @RequestMapping(value = "/getAllType", method = RequestMethod.GET)
+    public Object getAllType() {
+        return articleService.getAllType();
+    }
 }
 

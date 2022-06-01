@@ -48,8 +48,6 @@ public class UserController {
             BufferedReader buffReader = new BufferedReader(reader);
             APPID = buffReader.readLine();
             SECRET = buffReader.readLine();
-            System.out.println(APPID);
-            System.out.println(SECRET);
             buffReader.close();
         } catch (IOException e) {
             e.printStackTrace();

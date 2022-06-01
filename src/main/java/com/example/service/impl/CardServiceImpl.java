@@ -104,6 +104,7 @@ public class CardServiceImpl extends ServiceImpl<CardMapper, Card> implements Ca
         cardQueryWrapper.eq("user_id", userId);
         cardQueryWrapper.eq("completed", true);
         List<Card> cards = cardMapper.selectList(cardQueryWrapper);
+        if (cards.size() == 0) return 0;
         int idx = cards.size() - 1;
         LocalDate lastTime = cards.get(idx).getClockTime();
         if (lastTime.equals(LocalDate.now()) || lastTime.equals(LocalDate.now().minusDays(1))) {

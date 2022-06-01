@@ -24,4 +24,6 @@ public interface ArticleService extends IService<Article> {
     Boolean queryStar(Integer userId, Integer articleId);
 
     Object cancelStarArticle(Integer userId, Integer articleId);
+
+    Object getAllType();
 }

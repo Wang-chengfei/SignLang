@@ -141,7 +141,8 @@ create table `article`
     `content`   varchar(4000),
     `label`     varchar(30),
     `img_url`   varchar(255),
-    `video_url` varchar(255)
+    `video_url` varchar(255),
+	`time` date
 );
 
 
@@ -155,6 +156,27 @@ create table `star_article`
     `article_id` int
 );
 
+-- ----------------------------
+-- 常用句子
+-- ----------------------------
+create table sentence_group(
+    id int primary key auto_increment,
+    user_id int,
+    name varchar(64),
+    foreign key (`user_id`) references `user`(`id`)
+);
+
+-- ----------------------------
+-- 句子分类
+-- ----------------------------
+create table `sentence`(
+    id int primary key auto_increment,
+    group_id int,
+    user_id int,
+    content varchar(255),
+    foreign key (`user_id`) references `user`(`id`),
+    foreign key (`group_id`) references sentence_group(`id`)
+);
 
 insert into `user` values (1000, 'wcf', 'xxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxx', 'xxx.jpg', '1');
 insert into `user` values (1001, 'hjh', 'xxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxx', 'xxx.jpg', '1');

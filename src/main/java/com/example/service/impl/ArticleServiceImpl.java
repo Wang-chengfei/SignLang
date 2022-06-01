@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -83,5 +85,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         starArticleQueryWrapper.eq("user_id", userId);
         starArticleQueryWrapper.eq("article_id", articleId);
         return starArticleMapper.delete(starArticleQueryWrapper);
+    }
+
+    @Override
+    public Object getAllType() {
+        List<Article> articles = articleMapper.selectList(null);
+        Set<String> set = new LinkedHashSet<>();
+        for (Article article : articles) {
+            set.add(article.getType());
+        }
+        return set;
     }
 }
