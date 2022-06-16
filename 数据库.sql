@@ -137,7 +137,7 @@ create table `article`
     `id`        int primary key auto_increment,
     `type`      varchar(30),
     `title`     varchar(255),
-    `abstract`  varchar(500),
+    `introduction`  varchar(500),
     `content`   varchar(4000),
     `label`     varchar(30),
     `img_url`   varchar(255),
@@ -156,6 +156,7 @@ create table `star_article`
     `article_id` int
 );
 
+
 -- ----------------------------
 -- 常用句子
 -- ----------------------------
@@ -165,6 +166,7 @@ create table sentence_group(
     name varchar(64),
     foreign key (`user_id`) references `user`(`id`)
 );
+
 
 -- ----------------------------
 -- 句子分类
@@ -178,8 +180,59 @@ create table `sentence`(
     foreign key (`group_id`) references sentence_group(`id`)
 );
 
-insert into `user` values (1000, 'wcf', 'xxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxx', 'xxx.jpg', '1');
-insert into `user` values (1001, 'hjh', 'xxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxx', 'xxx.jpg', '1');
+
+-- ----------------------------
+-- 听力测试集
+-- ----------------------------
+create table `listening_test`
+(
+    `id`      int primary key auto_increment,
+    `type`    varchar(30),
+    `decibel` varchar(30),
+    `url`     varchar(255)
+);
+
+
+-- ----------------------------
+-- 歌单
+-- ----------------------------
+create table `song_list`
+(
+    `id`           int primary key auto_increment,
+    `title`        varchar(30),
+    `img_url`      varchar(255),
+    `introduction` varchar(2000)
+);
+
+
+-- ----------------------------
+-- 歌曲
+-- ----------------------------
+create table `song`
+(
+    `id`           int primary key auto_increment,
+    `title`        varchar(30),
+    `author`       varchar(30),
+    `img_url`      varchar(255),
+    `url`          varchar(255),
+    `song_list_id` int,
+    foreign key (`song_list_id`) references `song_list` (`id`)
+);
+
+
+-- ----------------------------
+-- 收藏歌曲
+-- ----------------------------
+create table `star_song`
+(
+    `id`      int primary key auto_increment,
+    `user_id` int,
+    `song_id` int,
+    foreign key (`user_id`) references `user` (`id`),
+    foreign key (`song_id`) references `song` (`id`)
+);
+
+
 
 insert into `dictionary` values(1, '初级词典', '初级词典初级词典', 0);
 insert into `dictionary` values(2, '中级词典', '中级词典中级词典', 0);
