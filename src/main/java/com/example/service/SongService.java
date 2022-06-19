@@ -15,7 +15,7 @@ public interface SongService extends IService<Song> {
 
     Object getSongList();
 
-    Object getSong(Integer songListId);
+    Object getSong(Integer songListId, Integer userId);
 
     Object star(Integer userId, Integer songId);
 

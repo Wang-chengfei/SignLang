@@ -1,5 +1,7 @@
 package com.example.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.entity.Song;
 import com.example.entity.StarSong;
@@ -38,10 +40,53 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
     }
 
     @Override
-    public Object getSong(Integer songListId) {
-        QueryWrapper<Song> songQueryWrapper = new QueryWrapper<>();
-        songQueryWrapper.eq("song_list_id", songListId);
-        return songMapper.selectList(songQueryWrapper);
+    public Object getSong(Integer songListId, Integer userId) {
+        List<Song> songs;
+        //若无userId，直接返回
+        if (userId == null) {
+            QueryWrapper<Song> songQueryWrapper = new QueryWrapper<>();
+            songQueryWrapper.eq("song_list_id", songListId);
+            songs = songMapper.selectList(songQueryWrapper);
+            return songs;
+        }
+        //若有，则加上isStar字段
+        if (songListId == 1) {
+            songs = (List<Song>) getStar(userId);
+        }
+        else {
+            QueryWrapper<Song> songQueryWrapper = new QueryWrapper<>();
+            songQueryWrapper.eq("song_list_id", songListId);
+            songs = songMapper.selectList(songQueryWrapper);
+        }
+        if (songs.size() == 0) return new ArrayList<>();
+        JSONArray jsonArray = new JSONArray();
+        List<Integer> songIds = new ArrayList<>();
+        for (Song song : songs) {
+            songIds.add(song.getId());
+        }
+        QueryWrapper<StarSong> starSongQueryWrapper = new QueryWrapper<>();
+        starSongQueryWrapper.eq("user_id", userId);
+        starSongQueryWrapper.in("song_id", songIds);
+        List<StarSong> starSongs = starSongMapper.selectList(starSongQueryWrapper);
+        for (Song song : songs) {
+            Boolean isStar = false;
+            for (StarSong starSong : starSongs) {
+                if (starSong.getSongId() == song.getId()) {
+                    isStar = true;
+                    break;
+                }
+            }
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", song.getId());
+            jsonObject.put("title", song.getTitle());
+            jsonObject.put("author", song.getAuthor());
+            jsonObject.put("imgUrl", song.getImgUrl());
+            jsonObject.put("url", song.getUrl());
+            jsonObject.put("songListId", song.getSongListId());
+            jsonObject.put("isStar", isStar);
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
     }
 
     @Override

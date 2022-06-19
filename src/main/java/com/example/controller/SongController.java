@@ -38,8 +38,9 @@ public class SongController {
      *
      */
     @RequestMapping(value = "getSong", method = RequestMethod.GET)
-    public Object getSong(@RequestParam("songListId") Integer songListId) {
-        return songService.getSong(songListId);
+    public Object getSong(@RequestParam("songListId") Integer songListId,
+                          @RequestParam(value = "userId", required = false) Integer userId) {
+        return songService.getSong(songListId, userId);
     }
 
     /**

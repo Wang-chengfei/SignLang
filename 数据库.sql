@@ -233,6 +233,18 @@ create table `star_song`
 );
 
 
+-- ----------------------------
+-- 语音转换记录
+-- ----------------------------
+create table `record`(
+    `id` int auto_increment primary key,
+    `user_id` int,
+    `sentence` varchar(500),
+    `time` datetime,
+    foreign key (`user_id`) references `user`(`id`)
+)
+
+
 
 insert into `dictionary` values(1, '初级词典', '初级词典初级词典', 0);
 insert into `dictionary` values(2, '中级词典', '中级词典中级词典', 0);
