@@ -20,7 +20,7 @@ public interface MistakeWordService extends IService<MistakeWord> {
 
     int addSeveral(Integer userId, List<Integer> wordIds, Integer planId);
 
-    List<Word> queryAll(Integer userId);
+    Object queryAll(Integer userId);
 
     int removeOne(Integer userId, Integer wordId);
 

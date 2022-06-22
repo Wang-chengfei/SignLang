@@ -53,7 +53,7 @@ public class MistakeWordController {
      *
      */
     @RequestMapping(value = "queryAll", method = RequestMethod.GET)
-    public List<Word> queryAll(@RequestParam("userId") Integer userId) {
+    public Object queryAll(@RequestParam("userId") Integer userId) {
         return mistakeWordService.queryAll(userId);
     }
 

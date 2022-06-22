@@ -1,12 +1,11 @@
 package com.example.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.entity.Plan;
-import com.example.entity.PlanWord;
-import com.example.entity.PlanWordReturn;
-import com.example.entity.Word;
+import com.example.entity.*;
 import com.example.mapper.PlanMapper;
 import com.example.mapper.PlanWordMapper;
+import com.example.mapper.StarWordMapper;
 import com.example.mapper.WordMapper;
 import com.example.service.PlanWordService;
 import com.example.service.WordService;
@@ -37,6 +36,8 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
     private PlanWordMapper planWordMapper;
     @Autowired
     private PlanWordService planWordService;
+    @Autowired
+    private StarWordMapper starWordMapper;
 
     @Override
     public Word getRandomOne() {
@@ -44,8 +45,25 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
     }
 
     @Override
-    public Word queryOne(Integer id) {
-        return wordMapper.selectById(id);
+    public Object queryOne(Integer id, Integer userId) {
+        Word word = wordMapper.selectById(id);
+        if (userId == null) return word;
+        JSONObject jsonObject = new JSONObject();
+        QueryWrapper<StarWord> starWordQueryWrapper = new QueryWrapper<>();
+        starWordQueryWrapper.eq("word_id", word.getId());
+        starWordQueryWrapper.eq("user_id", userId);
+        StarWord starWord = starWordMapper.selectOne(starWordQueryWrapper);
+        jsonObject.put("id", word.getId());
+        jsonObject.put("type", word.getType());
+        jsonObject.put("answer", word.getAnswer());
+        jsonObject.put("answer2", word.getAnswer2());
+        jsonObject.put("answer3", word.getAnswer3());
+        jsonObject.put("answer4", word.getAnswer4());
+        jsonObject.put("description", word.getDescription());
+        jsonObject.put("imgUrl", word.getImgUrl());
+        jsonObject.put("dictionaryId", word.getDictionaryId());
+        jsonObject.put("isStar", starWord != null);
+        return jsonObject;
     }
 
     /**
@@ -85,7 +103,7 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
             planWordQueryWrapper.last("order by study_time desc, rand(1) limit " + amount);
         }
         List<PlanWord> planWordList = planWordMapper.selectList(planWordQueryWrapper);
-        System.out.println(planWordList);
+//        System.out.println(planWordList);
         if (planWordList.size() == 0) return null;
         //根据plan_word找到word
         List<Integer> idList = new ArrayList<>();

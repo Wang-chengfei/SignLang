@@ -20,7 +20,7 @@ public interface WordService extends IService<Word> {
 
     Word getRandomOne();
 
-    Word queryOne(Integer id);
+    Object queryOne(Integer id, Integer userId);
 
     List<PlanWordReturn> getTodayWord(Integer userId);
 

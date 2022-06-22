@@ -1,11 +1,10 @@
 package com.example.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.entity.*;
-import com.example.mapper.MistakeWordMapper;
-import com.example.mapper.PlanMapper;
-import com.example.mapper.PlanWordMapper;
-import com.example.mapper.WordMapper;
+import com.example.mapper.*;
 import com.example.service.MistakeWordService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.service.PlanWordService;
@@ -38,6 +37,8 @@ public class MistakeWordServiceImpl extends ServiceImpl<MistakeWordMapper, Mista
     private MistakeWordService mistakeWordService;
     @Autowired
     private PlanMapper planMapper;
+    @Autowired
+    private StarWordMapper starWordMapper;
 
     @Override
     public int add(Integer userId, Integer wordId, Integer planId) {
@@ -100,7 +101,7 @@ public class MistakeWordServiceImpl extends ServiceImpl<MistakeWordMapper, Mista
     }
 
     @Override
-    public List<Word> queryAll(Integer userId) {
+    public Object queryAll(Integer userId) {
         //查询错误单词id
         QueryWrapper<MistakeWord> mistakeWordQueryWrapper = new QueryWrapper<>();
         mistakeWordQueryWrapper.eq("user_id", userId);
@@ -109,7 +110,41 @@ public class MistakeWordServiceImpl extends ServiceImpl<MistakeWordMapper, Mista
         for (MistakeWord mistakeWord : mistakeWordList) {
             idList.add(mistakeWord.getWordId());
         }
-        return wordMapper.selectBatchIds(idList);
+        //查询已收藏单词
+        List<Word> wordList = wordMapper.selectBatchIds(idList);
+        //查询错误单词中已收藏单词id
+        QueryWrapper<StarWord> starWordQueryWrapper = new QueryWrapper<>();
+        starWordQueryWrapper.eq("user_id", userId);
+        starWordQueryWrapper.in("word_id", idList);
+        List<StarWord> starWordList = starWordMapper.selectList(starWordQueryWrapper);
+        List<Integer> idStarList = new ArrayList<>();
+        for (StarWord starWord : starWordList) {
+            idStarList.add(starWord.getWordId());
+        }
+        //返回JSONArray
+        JSONArray jsonArray = new JSONArray();
+        for (Word word : wordList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", word.getId());
+            jsonObject.put("type", word.getType());
+            jsonObject.put("answer", word.getAnswer());
+            jsonObject.put("answer2", word.getAnswer2());
+            jsonObject.put("answer3", word.getAnswer3());
+            jsonObject.put("answer4", word.getAnswer4());
+            jsonObject.put("description", word.getDescription());
+            jsonObject.put("imgUrl", word.getImgUrl());
+            jsonObject.put("dictionaryId", word.getDictionaryId());
+            Boolean isStar = false;
+            for (Integer id : idStarList) {
+                if (word.getId() == id) {
+                    isStar = true;
+                    break;
+                }
+            }
+            jsonObject.put("isStar", isStar);
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
     }
 
     @Override

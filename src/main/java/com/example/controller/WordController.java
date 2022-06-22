@@ -42,8 +42,9 @@ public class WordController {
      *
      */
     @RequestMapping(value = "/queryOne", method = RequestMethod.GET)
-    public Word queryOne(@RequestParam("id") Integer id) {
-        return wordService.queryOne(id);
+    public Object queryOne(@RequestParam("id") Integer id,
+                           @RequestParam(value = "userId", required = false) Integer userId) {
+        return wordService.queryOne(id, userId);
     }
 
     /**
