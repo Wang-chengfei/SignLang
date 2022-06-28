@@ -84,6 +84,12 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
         dictionaryQueryWrapper.eq("id", dictionaryId);
         Dictionary dictionary = dictionaryMapper.selectOne(dictionaryQueryWrapper);
         planReturn.setDictionary(dictionary);
+        //计算错词数
+        QueryWrapper<PlanWord> planWordQueryWrapper = new QueryWrapper<>();
+        planWordQueryWrapper.eq("plan_id", plan.getId());
+        planWordQueryWrapper.eq("is_mistake", true);
+        Integer mistakeNum = planWordMapper.selectCount(planWordQueryWrapper);
+        planReturn.setMistakeNum(mistakeNum);
         return planReturn;
     }
 
@@ -117,11 +123,16 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
         int planId = plan.getId();
         //向plan_word表中添加数据
         QueryWrapper<Word> wordQueryWrapper = new QueryWrapper<>();
-        List<Integer> dictionaryIds = new ArrayList<>();
-        for (int i = 1; i <= plan.getDictionaryId(); i++) {
-            dictionaryIds.add(i);
+        if (plan.getDictionaryId() <= 3) {
+            List<Integer> dictionaryIds = new ArrayList<>();
+            for (int i = 1; i <= plan.getDictionaryId(); i++) {
+                dictionaryIds.add(i);
+            }
+            wordQueryWrapper.in("dictionary_id", dictionaryIds);
         }
-        wordQueryWrapper.in("dictionary_id", dictionaryIds);
+        else  {
+            wordQueryWrapper.eq("dictionary_id", plan.getDictionaryId());
+        }
         List<Word> wordList = wordMapper.selectList(wordQueryWrapper);
         List<PlanWord> planWordList = new ArrayList<>();
         for (Word word : wordList) {
@@ -194,6 +205,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements Pl
             else if (completed == 1) planWordQueryWrapper.eq("completed", true);
         }
         List<PlanWord> planWordList = planWordMapper.selectList(planWordQueryWrapper);
+        if(planWordList.size() == 0) return new ArrayList<>();
         //根据plan_word查找出word
         List<Integer> wordIdList = new ArrayList<>();
         for (PlanWord planWord : planWordList) {

@@ -136,7 +136,7 @@ public class MistakeWordServiceImpl extends ServiceImpl<MistakeWordMapper, Mista
             jsonObject.put("dictionaryId", word.getDictionaryId());
             Boolean isStar = false;
             for (Integer id : idStarList) {
-                if (word.getId() == id) {
+                if (word.getId().equals(id)) {
                     isStar = true;
                     break;
                 }

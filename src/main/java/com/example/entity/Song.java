@@ -35,5 +35,7 @@ public class Song implements Serializable {
 
     private Integer songListId;
 
+    private String introduction;
+
 
 }

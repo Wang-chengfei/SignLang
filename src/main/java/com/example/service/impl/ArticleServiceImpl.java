@@ -45,8 +45,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             for (StarArticle starArticle : starArticles) {
                 articleIds.add(starArticle.getArticleId());
             }
-            if (isStar == 1) articleQueryWrapper.in("id", articleIds);
-            else articleQueryWrapper.notIn("id", articleIds);
+            if (isStar == 1) {
+                if (articleIds.size() == 0) return new ArrayList<>();
+                articleQueryWrapper.in("id", articleIds);
+            }
+            else {
+                if (articleIds.size() != 0)
+                articleQueryWrapper.notIn("id", articleIds);
+            }
         }
         List<Article> articles = articleMapper.selectList(articleQueryWrapper);
         return articles;

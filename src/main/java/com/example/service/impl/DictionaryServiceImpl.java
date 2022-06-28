@@ -57,11 +57,16 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryMapper, Diction
     @Override
     public List<Word> getAllWord(Integer dictionaryId) {
         QueryWrapper<Word> wordQueryWrapper = new QueryWrapper<>();
-        List<Integer> dictionaryIds = new ArrayList<>();
-        for (int i = 1; i <= dictionaryId; i++) {
-            dictionaryIds.add(i);
+        if (dictionaryId <= 3) {
+            List<Integer> dictionaryIds = new ArrayList<>();
+            for (int i = 1; i <= dictionaryId; i++) {
+                dictionaryIds.add(i);
+            }
+            wordQueryWrapper.in("dictionary_id", dictionaryIds);
         }
-        wordQueryWrapper.in("dictionary_id", dictionaryIds);
+        else {
+            wordQueryWrapper.eq("dictionary_id", dictionaryId);
+        }
         return wordMapper.selectList(wordQueryWrapper);
     }
 }

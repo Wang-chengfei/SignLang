@@ -160,17 +160,6 @@ create table `star_article`
 -- ----------------------------
 -- 常用句子
 -- ----------------------------
-create table sentence_group(
-    id int primary key auto_increment,
-    user_id int,
-    name varchar(64),
-    foreign key (`user_id`) references `user`(`id`)
-);
-
-
--- ----------------------------
--- 句子分类
--- ----------------------------
 create table `sentence`(
     id int primary key auto_increment,
     group_id int,
@@ -178,6 +167,17 @@ create table `sentence`(
     content varchar(255),
     foreign key (`user_id`) references `user`(`id`),
     foreign key (`group_id`) references sentence_group(`id`)
+);
+
+
+-- ----------------------------
+-- 常用句子分组
+-- ----------------------------
+create table sentence_group(
+    id int primary key auto_increment,
+    user_id int,
+    name varchar(64),
+    foreign key (`user_id`) references `user`(`id`)
 );
 
 
@@ -194,18 +194,6 @@ create table `listening_test`
 
 
 -- ----------------------------
--- 歌单
--- ----------------------------
-create table `song_list`
-(
-    `id`           int primary key auto_increment,
-    `title`        varchar(30),
-    `img_url`      varchar(255),
-    `introduction` varchar(2000)
-);
-
-
--- ----------------------------
 -- 歌曲
 -- ----------------------------
 create table `song`
@@ -217,6 +205,19 @@ create table `song`
     `url`          varchar(255),
     `song_list_id` int,
     foreign key (`song_list_id`) references `song_list` (`id`)
+);
+
+
+
+-- ----------------------------
+-- 歌单
+-- ----------------------------
+create table `song_list`
+(
+    `id`           int primary key auto_increment,
+    `title`        varchar(30),
+    `img_url`      varchar(255),
+    `introduction` varchar(2000)
 );
 
 
@@ -242,7 +243,19 @@ create table `record`(
     `sentence` varchar(500),
     `time` datetime,
     foreign key (`user_id`) references `user`(`id`)
+);
+
+
+-- ----------------------------
+-- 轮播图
+-- ----------------------------
+create table `swiper`(
+    `id` int auto_increment primary key,
+    `url` varchar(255),
+    `type` varchar(30)
 )
+
+
 
 
 

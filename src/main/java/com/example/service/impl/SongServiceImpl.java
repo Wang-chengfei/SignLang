@@ -83,6 +83,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             jsonObject.put("imgUrl", song.getImgUrl());
             jsonObject.put("url", song.getUrl());
             jsonObject.put("songListId", song.getSongListId());
+            jsonObject.put("introduction", song.getIntroduction());
             jsonObject.put("isStar", isStar);
             jsonArray.add(jsonObject);
         }

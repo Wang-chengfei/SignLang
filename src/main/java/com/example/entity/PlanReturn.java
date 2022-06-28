@@ -48,4 +48,6 @@ public class PlanReturn {
 
     private Dictionary dictionary;
 
+    private Integer mistakeNum;
+
 }
